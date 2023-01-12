@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/invoice.css') }}">
+	<link href="static/bootstrap.min.css" rel="stylesheet" media="screen">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"
+		integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<style>
+		body {
+			background: #b9b9f9;
+			/* justify-content: center; */
+			/* align-items: center; */
+		}
+
+		/* .dropdown {
+			display: inline-block;
+			position: relative;
+		}
+
+		button {
+			border: none;
+			border-radius: 5px;
+			padding: 15px 30px;
+			font-size: 18px;
+			cursor: pointer;
+		}
+
+		button:hover {
+			background-color: #ddd;
+		}
+
+		.dropdown-options {
+			display: none;
+			position: absolute;
+			overflow: auto;
+			background-color: #fff;
+			border-radius: 5px;
+			box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.4);
+		}
+
+		.dropdown:hover .dropdown-options {
+			display: block;
+		}
+
+		.dropdown-options a {
+			display: block;
+			color: #000000;
+			padding: 5px;
+			text-decoration: none;
+			padding: 20px 40px;
+		}
+
+		.dropdown-options a:hover {
+			color: #0a0a23;
+			background-color: #ddd;
+			border-radius: 5px;
+		} */
+
+
+
+		.options {
+			/* border: 1px solid red; */
+			margin-top: 5%;
+			padding: 100px;
+			/* text-align: center; */
+			/* margin: 1rem; */
+			/* padding: 2rem 2rem; */
+
+		}
+
+		.new {
+			font-size: 25px;
+			/* border: 1px solid red;
+			border-radius: 20px;
+			border-width: 3px; */
+			margin-top: 4%;
+			/* position: relative; */
+			left: -45%;
+			padding: 1rem 1rem;
+			/* display: inline-block; */
+			/* vertical-align: middle; */
+		}
+
+		.exisiting {
+			font-size: 25px;
+			/* border: 1px solid red;
+			border-radius: 20px;
+			border-width: 3px; */
+			/* float:left; */
+			margin-top: 2%;
+			/* position: relative; */
+			left: -10%;
+			padding: 1rem 1rem;
+			/* display: inline-block; */
+			/* vertical-align: middle; */
+		}
+	</style>
+</head>
+
+<body>
+	<div class="neclogo">
+		<img class="neclogo" src="https://www.nec.com/nf_global/v3/common/img/site/header-img.webp" />
+	</div>
+	<div class="options">
+		<h1>
+			Choose 1 of the following:
+		</h1>
+		<div class="new">
+			<b>(a)  Create a New Purchase Order:  </b>
+			<a class="link" href="http://127.0.0.1:5000/purchaseOrder"> Click Here</a>
+
+		</div>
+
+		<div class="exisiting">
+			<b>
+				(b)  Update an existing Purchase Order:
+<br><br>
+				Enter PO Number:
+			</b>
+			<input id="po-number" class="po-number" type="text">
+			<input type="hidden" id="edit" value="1">
+			<br><br>
+			<button class="btn-primary" style="width: 150px" onclick="srch();">Enter</button>
+			<script src="{{ url_for('static', filename='src/edit_Invoice.js') }}"></script>
+		</div>
+	</div>
+	<!-- <div class="dropdown">
+		<button>Choose 1 of the following</button>
+		<div class="dropdown-options">
+			<a href="http://127.0.0.1:5000/purchaseOrder">New Invoice</a>
+			
+			<a href="http://127.0.0.1:5000/enterPO">Update an existing invoice</a>
+			
+		</div> -->
+	<!-- </div> -->
+</body>
+
+</html>

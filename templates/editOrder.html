@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/invoice.css') }}">
+  <title>Purchase Order</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <script>
+    var rowIdx;
+    $(document).ready(function () {
+
+
+      //getting item details.
+      var json_type;
+      var res;
+      var sep = " !$ ";
+      $.ajax({
+        url: "/fetchItemDetails?po_number=" + poNum,
+        type: 'GET',
+        async: false,
+        success: function (response) {
+          // json_type = JSON.parse(response);
+          // for (x = 0; x < json_type.length; x++) {
+          //   res[x] = json_type[x].item_qty + sep + json_type[x].item_number + sep + json_type[x]
+          //     .item_desription +
+          //     sep + json_type[x].delivery_date + sep + json_type[x].unit_price + sep + json_type[x]
+          //     .item_total;
+          res = response;
+        }
+
+      });
+
+
+
+      // alert("!!!!" + res)
+      //JSON.parse(res);
+      obj = JSON.parse(res);
+      var len = 0;
+      for (var i in obj.podata)
+        len++;
+
+      rowIdx = 1;
+      // alert("num of Rows" + obj.si);
+      for (i = 1; i <= len; i++) {
+        document.getElementById(`QTY${i}`).innerText = obj.podata[i - 1].item_qty;
+        document.getElementById(`UNT${i}`).innerText = obj.podata[i - 1].item_number;
+        document.getElementById(`DESC${i}`).innerText = obj.podata[i - 1].item_description;
+        document.getElementById(`DD${i}`).innerText = obj.podata[i - 1].delivery_date;
+        document.getElementById(`UP${i}`).innerText = obj.podata[i - 1].unit_price;
+        document.getElementById(`TOT${i}`).innerText = obj.podata[i - 1].item_total;
+        // count++;
+        if (i != len) {
+          addRow();
+        }
+        calculateTotal($(document.getElementById(`TOT${i}`)));
+      }
+      // calculateTotal($(this));
+    });
+
+    function calculateTotal(currentGroup) {
+
+      // alert("calculate called with"+currentGroup);
+      var groupTotal = 0;
+      currentGroup.parents('table').find('.rowTotal').each(function (i) {
+        groupTotal = Number(groupTotal) + Number($(this).text());
+      });
+      currentGroup.parents('table').find('.total').text(groupTotal.toFixed(2));
+      currentGroup.parents('table').find('.subtotal').text(groupTotal.toFixed(2));
+    }
+
+
+
+
+    function addRow() {
+
+      // $(this).parents('table').find('tbody').append($(this).parents('table').find('tbody tr:last-child').clone());
+      // calculateTotal($(this));
+      // alert("Add row");
+      // Denotes total number of rows
+      // numOfCols = numOfCols + 1;
+      //alert(numOfCols);
+      // alert("num of columns"numOfCols);
+      // Adding a row inside the tbody.
+      // alert("rowidx:" + rowIdx);
+      $('#itemProperties').append(`<tr id="R${++rowIdx}">
+    <td class="qty" id="QTY${rowIdx}" contenteditable="true">
+    1
+    </td>
+    <td id="UNT${rowIdx}" contenteditable="true" class="text-center"></td>
+    <td id="DESC${rowIdx}" contenteditable="true"></td>
+    <td id="DD${rowIdx}" contenteditable="true"></td>
+    <td class="amount" id="UP${rowIdx}" contenteditable="true">0</td>
+    <td id="TOT${rowIdx}" class="amount amountColumn rowTotal" contenteditable="true">0</td>
+    
+    <td class="docEdit tdDelete row-index text-center">X</td>
+    </tr>`);
+      //$(this).parents('table').find('tbody').append($(this).parents('table').find('tbody tr:last-child').clone());
+      // calculateTotal($("#TOT${rowIdx}"));
+      // alert(rowIdx);
+
+    }
+
+    function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+        results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    // query string: ?foo=lorem&bar=&baz
+    var poNum = getParameterByName('poNum');
+    // alert(poNum);
+
+    var arr = [];
+    var From;
+    var destination;
+    var currency;
+    var companyNameAndAddress;
+    var PONumber;
+    var PODate;
+    var buyerName;
+    var VendorNameAndAddress;
+    var importantInstructions;
+    var paymentDetailing;
+
+    $.ajax({
+      url: "/searchPO?po_number=" + poNum,
+      type: 'GET',
+      async: false,
+      success: function (response) {
+        var res = response;
+        arr = res.split(",");
+        From = arr[0];
+        destination = arr[1];
+        currency = arr[2];
+        companyNameAndAddress = arr[3];
+
+        PODate = arr[5];
+        buyerName = arr[6];
+        VendorNameAndAddress = arr[7];
+        importantInstructions = arr[8];
+        paymentDetailing = arr[9];
+      },
+    });
+  </script>
+  <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+  <script src="{{ url_for('static', filename='src/edit_Invoice.js') }}"></script>
+
+  <div id="entirePage">
+    <div class="neclogo">
+      <img class="neclogo" src="https://www.nec.com/nf_global/v3/common/img/site/header-img.webp" />
+    </div>
+
+    <div>
+
+      <h1 class="heading">Edit Purchase Order</h1>
+
+      <div class="document active">
+        <div class="spreadSheetGroup">
+
+
+          <table id="shipToFrom">
+            <thead style="font-weight:bold">
+              <tr>
+                <th>FROM</th>
+                <th>DESTINATION</th>
+                <th>Currency</th>
+              </tr>
+
+            </thead>
+            <tbody>
+              <tr>
+                <td id="fromLocation" contenteditable="true" style="width:33.33%"></td>
+                <td id="destination" contenteditable="true" style="width:33.33%"></td>
+                <td id="currency" contenteditable="true" ALIGN="center" style="width:33.33%">
+                  <!-- <select id="selecting">
+                  <option value="Rupee">Rupee</option>
+                  <option value="Euro">EUR</option>
+                  <option value="USD">USD</option>
+                  <option value="JPY">Japanese yen</option>
+                </select> -->
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <hr style="visibility:hidden" />
+
+          <table id="PO-Details">
+            <thead style="font-weight:bold">
+              <tr>
+                <th>Company Name and Address</th>
+                <th>PO Number</th>
+                <th>PO Date (YYYY-MM-DD)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="companyDetails" contenteditable="true" style="width:33.3%"></td>
+                <td id="PONumber" contenteditable="false" style="width:33.3%"></td>
+                <td id="PODate" contenteditable="true" style="width:33.3%"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <table id="BuyerandVendor">
+            <thead style="font-weight:bold">
+              <tr>
+                <th>Buyer Name</th>
+                <th>Vendor Name and Address</th>
+                <th>Important Instructions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="buyer-name" contenteditable="true" style="width:33.3%"></td>
+                <td id="vendorDetails" contenteditable="true" style="width:33.3%"></td>
+                <td id="importantInstructions" contenteditable="true" style="width:33.3%"></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <br>
+          <h2>Item Details</h2>
+          <table id="itemProperties" class="proposedWork" width="100%" style="margin-top:20px">
+            <thead>
+
+              <th>QTY</th>
+              <th>UNIT</th>
+              <th>DESCRIPTION</th>
+              <th>Delivery Date</th>
+              <th>UNIT PRICE</th>
+              <th class="amountColumn">TOTAL</th>
+
+
+
+              <th class="docEdit trAdd">+</th>
+            </thead>
+            <tbody id="itemDetails">
+              <tr id="R1">
+                <td id="QTY1" class="qty" contenteditable="true">1</td>
+                <td id="UNT1" class="unit" contenteditable="true"></td>
+                <td id="DESC1" contenteditable="true" class="description"></td>
+                <td id="DD1" class="delivery-date" contenteditable="true"></td>
+                <td id="UP1" class="amount" contenteditable="true">0</td>
+                <td id="TOT1" class="amount amountColumn rowTotal" contenteditable="true">0</td>
+
+
+                <td class="docEdit tdDelete">X</td>
+                <!-- <td class="docEdit tdDelete">X</td> -->
+              </tr>
+            </tbody>
+            <tfoot>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+
+                <td style="border:none"></td>
+
+
+                <td style="border:none;text-align:right">SUBTOTAL:</td>
+                <td class="amount subtotal">0.00</td>
+
+                <td style="border:none"></td>
+
+                <td class="docEdit"></td>
+              </tr>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+
+                <td style="border:none"></td>
+
+
+
+                <td style="border:none;text-align:right">SALES TAX:</td>
+                <td class="amount" contenteditable="true">0.00</td>
+
+                <td style="border:none"></td>
+
+                <td class="docEdit"></td>
+              </tr>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+
+                <td style="border:none"></td>
+
+
+                <td style="border:none;text-align:right;white-space:nowrap">SHIPPING & HANDLING:</td>
+                <td class="amount" contenteditable="true">0.00</td>
+
+                <td style="border:none"></td>
+
+                <td class="docEdit"></td>
+              </tr>
+              <tr>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+                <td style="border:none"></td>
+
+                <td style="border:none"></td>
+
+
+                <td style="border:none;text-align:right">TOTAL:</td>
+                <td class="total amount" contenteditable="true">0.00</td>
+
+                <td style="border:none"></td>
+
+                <td class="docEdit"></td>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div>
+      </div>
+
+      <table class="tableBorder">
+        <thead style="font-weight:bold">
+          <tr>
+            <th>Payment Details</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="paymentDetails1" contenteditable="true"></td>
+
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <button class="save" style="width: 150px" onclick="saveIntoDB();">Save</button>
+
+  <button class="print-report" style="width: 150px" onclick="printReport();">Print Report</button>
+
+</body>
+
+</html>
