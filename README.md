@@ -8,16 +8,15 @@ Overview
     <ul>3.	Then accordingly the user choose one of them and performs that activity.</ul>
 
 <h2>Framework & Technology</h2>
-  The framework used here is flask that acts as local server and runs python. Also, in combination to that I have used HTML, CSS to build the front-end UI. For the       functioning of the webpage I have used JavaScript along with AJAX to run python scripts and communicate with the server. For performing various operations like         adding a row or deleting a row, jQuery is used. For storage of data I am using MySQL database. 
-
+  The framework used here is flask that acts as local server and runs python. Also, in combination to that I have used HTML, CSS to build the front-end UI. For the functioning of the webpage I have used JavaScript along with AJAX to run python scripts and communicate with the server. For performing various operations like adding a row or deleting a row, jQuery is used. For storage of data I am using MySQL database. 
 
 <h3>Description of Code Segments</h3>
-  1.	app.py – used to run flask web server and also used to connect to database. This file has functions like insertOrder(), editOrNew(), executeQuery() and many more       which perform several database operations and redirect to another web page. It also runs HTML files using render_template.
-  2.	login.html – Its an HTML file for creating a login page.
-  3.	editOrNew.html – Its an HTML file for choosing either of the options.
-  4.	purchaseOrder.html – Its an HTML file for creating a new purchase order page.
-  5.	editOrder.html – It’s an HTML file for editing an existing purchase order.
-  6.	invoice.css – It is used for styling various webpages.
-  7.	edit_Invoice.js – It’s the JS file for editing.
-  8.	new_Invoice.js – It’s the JS file for creating a new PO.
+  <ul>1.	app.py – used to run flask web server and also used to connect to database. This file has functions like insertOrder(), editOrNew(), executeQuery() and many more       which perform several database operations and redirect to another web page. It also runs HTML files using render_template.</ul>
+  <ul>2.	login.html – Its an HTML file for creating a login page.</ul>
+ <ul> 3.	editOrNew.html – Its an HTML file for choosing either of the options.</ul>
+ <ul> 4.	purchaseOrder.html – Its an HTML file for creating a new purchase order page.</ul>
+ <ul> 5.	editOrder.html – It’s an HTML file for editing an existing purchase order.</ul>
+  <ul>6.	invoice.css – It is used for styling various webpages.</ul>
+  <ul>7.	edit_Invoice.js – It’s the JS file for editing.</ul>
+ <ul> 8.	new_Invoice.js – It’s the JS file for creating a new PO.</ul>
   
